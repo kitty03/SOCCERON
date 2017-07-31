@@ -16,14 +16,14 @@ h1 {
 
 .imagen {
   width: 100%;
-  background-color: #000;
+  background-color: #6EAE2C;
   color: #fff;
 }
 .imagen-col2 {
   padding-top: 10px;
 
   height: 150px;
-  background-color: #000;
+  background-color: #6EAE2C;
   color: #fff;
 }
 
@@ -136,7 +136,7 @@ h1 {
 }
 
 .related-content h1::before {
-  background: #000;
+  background: #6EAE2C;
   content: "";
   display: block;
   height: 2px;
@@ -222,7 +222,7 @@ h1 {
 	text-align: center;
 	padding-top: 10em;
 	padding-bottom: 4em;
-	background-color: #000;
+	background-color: #6EAE2C;
 	color: #fff;
 }
 
@@ -265,7 +265,7 @@ footer {
 	text-align: center;
 	padding-top: 8em;
 	padding-bottom: 8em;
-	background-color: #000;
+	background-color: #6EAE2C;
 	color: #fff;
 }
 

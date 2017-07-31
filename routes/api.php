@@ -49,7 +49,7 @@ Route::group(['middleware' => 'auth:jug'], function () {
   Route::get('/jugador/partida', 'PartidasController@index')-> name('ver.partida');
   Route::post('/jugador/partida', 'PartidasController@store')-> name('guardar.partida');
   Route::delete('/jugador/partida', 'PartidasController@delete')-> name('eliminar.partida');
-    Route::get('/jugador/partida/ver', 'PartidasController@index')-> name('lista');
+  Route::get('/jugador/partida/ver', 'PartidasController@index')-> name('lista');
 
   //rutas de equipo
   Route::post('/jugador/partida/unir', 'EquiposController@store')-> name('unir');
@@ -57,3 +57,7 @@ Route::group(['middleware' => 'auth:jug'], function () {
   Route::get('/jugador/partida/desactivar','EquiposController@status')->name('estado');
 });
 });
+
+
+//dar de baja partidas
+Route::get('verificar','PartidasController@dardebaja');

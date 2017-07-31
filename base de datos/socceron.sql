@@ -1,75 +1,148 @@
-/*==============================================================*/
-/* DBMS name:      MySQL 5.0                                    */
-/* Created on:     7/6/2017 21:05:50                            */
-/*==============================================================*/
+-- phpMyAdmin SQL Dump
+-- version 4.6.5.2
+-- https://www.phpmyadmin.net/
+--
+-- Servidor: 127.0.0.1
+-- Tiempo de generación: 31-07-2017 a las 05:15:52
+-- Versión del servidor: 10.1.21-MariaDB
+-- Versión de PHP: 7.1.1
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
 
 
-drop table if exists canchas;
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-drop table if exists equipos;
+--
+-- Base de datos: `socceron`
+--
 
-drop table if exists jugadores;
+-- --------------------------------------------------------
 
-drop table if exists partidas;
+--
+-- Estructura de tabla para la tabla `canchas`
+--
 
-/*==============================================================*/
-/* Table: canchas                                               */
-/*==============================================================*/
-create table canchas
-(
-   id_ca                int not null auto_increment,
-   descripcion_ca       varchar(50) not null,
-   sector_ca            varchar(30),
-   tipo_ca              char(20),
-   latitud_ca           decimal(8,2) not null,
-   longitu_ca           decimal(8,2) not null,
-   primary key (id_ca)
-);
+CREATE TABLE `canchas` (
+  `id_ca` int(11) NOT NULL,
+  `descripcion_ca` varchar(50) NOT NULL,
+  `sector_ca` varchar(30) DEFAULT NULL,
+  `tipo_ca` char(20) DEFAULT NULL,
+  `latitud_ca` decimal(8,2) NOT NULL,
+  `longitu_ca` decimal(8,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-/*==============================================================*/
-/* Table: equipos                                               */
-/*==============================================================*/
-create table equipos
-(
-   id_pa                int not null,
-   id_ju                int not null,
-   fecha_co             timestamp
-);
+-- --------------------------------------------------------
 
-/*==============================================================*/
-/* Table: jugadores                                             */
-/*==============================================================*/
-create table jugadores
-(
-   id_ju                int not null auto_increment,
-   nombre_ju            char(20) not null,
-   contrasena_ju        char(60) not null,
-   correo_ju            varchar(50) not null,
-   token_ju             char(100),
-   fb_ju                char(20),
-   estado_ju            bool default 1,
-   primary key (id_ju)
-);
+--
+-- Estructura de tabla para la tabla `equipos`
+--
 
-/*==============================================================*/
-/* Table: partidas                                              */
-/*==============================================================*/
-create table partidas
-(
-   id_pa                int not null auto_increment,
-   id_ca                int not null,
-   empieza_pa           datetime,
-   estado_pa            bool default 1,
-   jugadores_pa         int,
-   primary key (id_pa)
-);
+CREATE TABLE `equipos` (
+  `id_pa` int(11) NOT NULL,
+  `id_ju` int(11) NOT NULL,
+  `fecha_co` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
-alter table equipos add constraint fk_conformado2 foreign key (id_pa)
-      references partidas (id_pa) on delete restrict on update restrict;
+-- --------------------------------------------------------
 
-alter table equipos add constraint fk_conforman foreign key (id_ju)
-      references jugadores (id_ju) on delete restrict on update restrict;
+--
+-- Estructura de tabla para la tabla `jugadores`
+--
 
-alter table partidas add constraint fk_utilizan foreign key (id_ca)
-      references canchas (id_ca) on delete restrict on update restrict;
+CREATE TABLE `jugadores` (
+  `id_ju` int(11) NOT NULL,
+  `nombre_ju` varchar(200) NOT NULL,
+  `contrasena_ju` char(60) NOT NULL,
+  `correo_ju` varchar(200) NOT NULL,
+  `token_ju` char(100) DEFAULT NULL,
+  `fb_ju` varchar(300) DEFAULT NULL,
+  `estado_ju` tinyint(1) DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `partidas`
+--
+
+CREATE TABLE `partidas` (
+  `id_pa` int(11) NOT NULL,
+  `id_ca` int(11) NOT NULL,
+  `empieza_pa` datetime DEFAULT NULL,
+  `estado_pa` tinyint(1) DEFAULT '1',
+  `jugadores_pa` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `canchas`
+--
+ALTER TABLE `canchas`
+  ADD PRIMARY KEY (`id_ca`);
+
+--
+-- Indices de la tabla `equipos`
+--
+ALTER TABLE `equipos`
+  ADD KEY `fk_conformado2` (`id_pa`),
+  ADD KEY `fk_conforman` (`id_ju`);
+
+--
+-- Indices de la tabla `jugadores`
+--
+ALTER TABLE `jugadores`
+  ADD PRIMARY KEY (`id_ju`);
+
+--
+-- Indices de la tabla `partidas`
+--
+ALTER TABLE `partidas`
+  ADD PRIMARY KEY (`id_pa`),
+  ADD KEY `fk_utilizan` (`id_ca`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `canchas`
+--
+ALTER TABLE `canchas`
+  MODIFY `id_ca` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `jugadores`
+--
+ALTER TABLE `jugadores`
+  MODIFY `id_ju` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT de la tabla `partidas`
+--
+ALTER TABLE `partidas`
+  MODIFY `id_pa` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `equipos`
+--
+ALTER TABLE `equipos`
+  ADD CONSTRAINT `fk_conformado2` FOREIGN KEY (`id_pa`) REFERENCES `partidas` (`id_pa`),
+  ADD CONSTRAINT `fk_conforman` FOREIGN KEY (`id_ju`) REFERENCES `jugadores` (`id_ju`);
+
+--
+-- Filtros para la tabla `partidas`
+--
+ALTER TABLE `partidas`
+  ADD CONSTRAINT `fk_utilizan` FOREIGN KEY (`id_ca`) REFERENCES `canchas` (`id_ca`);
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

@@ -14,3 +14,7 @@
 Route::get('/',function(){
   return view('index');
 })->name('index');
+
+
+Route::get('/facebook', 'Auth\AutenticacionJugador@redirect')->name('fb.redirect');
+Route::get('/callback', 'Auth\AutenticacionJugador@callback')->name('fb.callback');

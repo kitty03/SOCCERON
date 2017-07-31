@@ -7,6 +7,7 @@ use App\Equipo;
 use App\Partida;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Jenssegers\Date\Date;
 
 class PartidasController extends Controller{
 
@@ -20,7 +21,22 @@ class PartidasController extends Controller{
                             ->join('canchas','canchas.id_ca','=','partidas.id_ca')
                             ->where('estado_pa',true)
                             ->select(DB::raw("id_pa id_,empieza_pa,jugadores_pa,(SELECT COUNT(*) FROM equipos WHERE id_pa=id_) actuales_pa,descripcion_ca,sector_ca,tipo_ca,latitud_ca,longitu_ca"))->get();
-        return $partidas;
+
+        Date::setLocale('es');
+
+        foreach ($partidas as $item){
+            $a['id_']               =   $item->id_;
+            $a['empieza_pa']        =   Date::createFromFormat('Y-m-d H:i:s',$item->empieza_pa)->diffForHumans();
+            $a['jugadores_pa']      =   $item->jugadores_pa;
+            $a['actuales_pa']       =   $item->actuales_pa;
+            $a['descripcion_ca']    =   $item->descripcion_ca;
+            $a['sector_ca']         =   $item->sector_ca;
+            $a['tipo_ca']           =   $item->tipo_ca;
+            $a['latitud_ca']        =   $item->latitud_ca;
+            $a['longitu_ca']        =   $item->longitu_ca;
+            $b[]                    =   $a;
+        }
+        return $b;
     }
 
     /*
@@ -113,5 +129,23 @@ class PartidasController extends Controller{
             //caso contrario no se cambiara el estado porque pueda que la partida ni exista
                 return (['estado'=>false,'mensaje'=>'No existe el Partido']);
           }
-  }
+    }
+
+
+    /**
+     *
+     *
+     *
+     *
+     *
+     * */
+    public function dardeBaja(){
+        //$query  =   Partida::where('empieza_pa',)
+        Date::setLocale('es');
+        $a = Date::now()->format('Y-m-d H:i:s');
+
+        $query  =   Partida::where('empieza_pa','<',$a)->update(['estado_pa' => 0]);
+
+        return $query;
+    }
 }

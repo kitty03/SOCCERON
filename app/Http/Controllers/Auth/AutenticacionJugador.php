@@ -5,6 +5,7 @@ use Auth;
 use App\Jugador;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 
@@ -51,5 +52,40 @@ class AutenticacionJugador extends Controller{
         $jugador->contrasena_ju = bcrypt($request->correo);
         return (['estado'=>true,'mensaje'=>'Credenciales Guardados','vista'=>'inicio','url'=>route('registerfb.submit')]);
       }
+    }
+
+
+    public function redirect(){
+        return Socialite::driver('facebook')->redirect();
+    }
+
+    public function callback(){
+
+        $usuario    =   Socialite::driver('facebook')->user();
+        //return ([$usuario]);
+
+        $nombre     = $usuario->name;
+        $correo     = $usuario->email;
+        $foto       = $usuario->avatar;
+
+
+        $id = Jugador::where('correo_ju',$correo)->first();
+        if($id){
+            $id->fb_ju      = $foto;
+            $id->estado_ju  =   true;
+            $id->save();
+            Auth::loginUsingId($id->id_ju);
+            return (['estado'=>true,'mensaje'=>'Credenciales Correctos','vista'=>'inicio','info'=>Auth::user()]);
+        }else{
+            $jugador                =  new Jugador();
+            $jugador->fb_ju         = $foto;
+            $jugador->nombre_ju     = $nombre;
+            $jugador->correo_ju     = $correo;
+            $jugador->contrasena_ju = bcrypt($correo);
+            $jugador->save();
+
+            Auth::loginUsingId($jugador->id_ju);
+            return (['estado'=>true,'mensaje'=>'Credenciales Guardados','vista'=>'inicio','url'=>route('registerfb.submit')]);
+        }
     }
 }
