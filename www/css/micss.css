@@ -1,10 +1,21 @@
+.brand-logo{
+  font-size: 1.2rem;
+}
+.foto-perfil{
+  margin-top: -6em;
+  z-index: 1;
+  position: relative;
+}
 .input-field input:focus + label {
-    color: #007700 !important;
+    color: #10416B !important;
 }
 /* label underline focus color */
 .row .input-field input:focus {
-    border-bottom: 1px solid #007700 !important;
-    box-shadow: 0 1px 0 0 #007700 !important
+    border-bottom: 1px solid #10416B !important;
+    box-shadow: 0 1px 0 0 #10416B !important
+}
+.input-field .prefix .active{
+  color: #10416B;
 }
 .fondo{
     background-color: #c3c3c4;
@@ -15,6 +26,10 @@
 .wrapper input[type="text"] {
     position: relative;
 }
+.linea{
+  border-bottom: 3px solid gray;
+  border-bottom-style: dotted;
+}
 
 input { font-family: 'FontAwesome'; } /* This is for the placeholder */
 
@@ -24,4 +39,7 @@ input { font-family: 'FontAwesome'; } /* This is for the placeholder */
     position: relative;
     left: -10px;
     content: "\f007";
+}
+.input{
+
 }
