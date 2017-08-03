@@ -5,8 +5,6 @@
     <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,width=device-width, height=device-height, target-densitydpi=device-dpi" />
     <title>SOCCERON</title>
     <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/animate.min.css">
@@ -17,31 +15,43 @@
         width: 100%;
         position: absolute;
        }
-       .tabs .tab a:hover, .tabs .tab a.active {
-            background-color: #01579B;
-            color: #FFF;
-        }
-        .fin{
-          position: absolute;
-          bottom: 0;
-          width: 100%;
-          height: 40px;
-        }
     </style>
 
 </head>
 <body class="fondo animated fadeIn">
-
   <div id="principal">
     <nav class="nav-extended light-blue darken-4">
       <div class="nav-wrapper">
         <a href="principal.html" class="brand-logo" style="font-size: 1.2rem">SOCCERON</a>
+        <a href="#" data-activates="menu" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="side-nav" id="menu">
+          <li>
+            <div class="userView">
+              <div class="background">
+                  <img src="img/fondo.jpg">
+              </div>
+              <a href="#!user"><img class="circle" :src="foto" ></a>
+              <a href="#!name"><span class="white-text name">{{nombre}} <br> {{correo}}</span></a>
+              <br>
+            </div>
+          </li>
+          <li><a href="#contactenos"><i class="material-icons">forum</i> Contactenos</a></li>
+          <li><a href="#ayuda"><i class="material-icons">help</i> Ayuda</a></li>
+          <li><a href="#config"><i class="material-icons">settings</i> Ajustes</a></li>
+          <li><a href="#cerrar" v-on:click="cerrarSesion()"><i class="material-icons">info</i> Cerrar Sesion</a></li>
+        </ul>
         <ul class="right">
           <li><a href="#notificaciones"><i class="material-icons">notifications</i></a></li>
         </ul>
       </div>
+      <div class="nav-content">
+        <ul class="tabs tabs-transparent">
+          <li class="tab"><a class="active" href="#inicio">INICIO</a></li>
+          <li class="tab"><a href="#partidas">PARTIDAS</a></li>
+        </ul>
+      </div>
     </nav>
-    <div id="inicio" class="col s12" >
+    <div id="inicio" class="col s12">
       <div class="card">
         <div class="card-image">
           <img src="img/fondo.jpg" style="height:90px"/>
@@ -86,28 +96,6 @@
         </a>
       </div>
     </div>
-    <div id="mas" class="col s12">
-
-          <div class="userView">
-            <div class="background">
-                <img src="img/fondo.jpg">
-            </div>
-            <a href="#!user"><img class="circle" :src="foto" ></a>
-            <a href="#!name"><span class="white-text name">{{nombre}} <br> {{correo}}</span></a>
-            <br>
-          </div>
-        </li>
-        <li><a href="#contactenos"><i class="material-icons">forum</i> Contactenos</a></li>
-        <li><a href="#ayuda"><i class="material-icons">help</i> Ayuda</a></li>
-        <li><a href="#config"><i class="material-icons">settings</i> Ajustes</a></li>
-        <li><a href="#cerrar" v-on:click="cerrarSesion()"><i class="material-icons">info</i> Cerrar Sesion</a></li>
-
-    </div>
-    <ul class="tabs tabs-fixed-width fin">
-      <li class="tab"><a href="#inicio" class="active"><small class="blue-text"><i class="material-icons">person</i><br>Inicio</small></a></li>
-      <li class="tab"><a href="#partidas" ><small class="blue-text"><i class="material-icons">location_on</i></small><br>Partidas</a></li>
-      <li class="tab"><a href="#mas" ><small class="blue-text"><i class="material-icons">more</i></small><br>Partidas</a></a></li>
-    </ul>
   </div>
 <script src="js/jquery.min.js"></script>
 <script src="js/axios.min.js"></script>
