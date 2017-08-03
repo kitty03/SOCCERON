@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <title>SOCCERON</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/micss.css">
+    <style media="screen">
+    #map_canvas{
+      width: 100%;
+      height: 300px;
+
+      float:inherit;
+    }
+    </style>
+</head>
+<body class="fondo animated fadeIn">
+  <div id="crearcancha">
+    <nav class="nav-extended light-blue darken-4">
+      <div class="nav-wrapper">
+        <a href="principal.html" class="brand-logo" style="font-size: 1.2rem">SOCCERON</a>
+        <a href="crear_partido.html"  class="button-collapse"><i class="material-icons">keyboard_arrow_left</i></a>
+      </div>
+    </nav>
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <div v-if="formulario==1">
+            <p>{{mensaje}}</p>
+            <div id="map_canvas"></div>
+            <form action="" name="form_mapa">
+              <input type="hidden" id="latitud">
+              <input type="hidden" id="longitud" >
+              <div class="input-field">
+                  <input type="text" class="validate" id="direccion" onchange="javascript: codeAddress();"/>
+              </div>
+            </form>
+
+              <div class="input-field">
+                  <input type="text" class="validate" v-model="descripcion"/>
+                  <label>Descripcion</label>
+              </div>
+              <div class="input-field">
+                  <input type="text" class="validate" v-model="sector"/>
+                  <label>Sector</label>
+              </div>
+              <div class="input-field">
+                  <input type="text" class="validate" v-model="tipo"/>
+                  <label>Tipo</label>
+              </div>
+              <button class="waves-effect waves-light btn grey" style="display: block; width: 100%;" type="button" v-on:click="enviar">GUARDAR</button>
+
+          </div>
+          <div v-if="formulario==2">
+            <p>{{mensaje}}</p>
+            <div class="preloader-wrapper active">
+            <div class="spinner-layer spinner-blue">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/vue.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8Osn5X_k12-In9NLjyI3wZoCf8Ta0LE"></script>
+<script src="js/google.js"></script>
+<script>
+
+const crearcancha = new Vue({
+    el: '#crearcancha',
+    data: {
+        longitud:0,
+        latitud:0,
+        descripcion:'',
+        sector:'',
+        tipo:'',
+        formulario:1,
+        mensaje:'Busque en el mapa su Cancha'
+    },
+    methods: {
+        enviar: function(){
+              this.longitud=$('#longitud').val();
+              this.latitud=$('#latitud').val();
+              if(this.latitud!='' && this.longitud!='' && this.descripcion!='' ){
+                this.formulario=2;
+                this.mensaje='Procensando';
+                Materialize.toast(this.mensaje, 2000);
+                axios({
+                    method: 'POST',
+                    url: 'http://socceron.16mb.com/api/jugador/cancha',
+                    data: {
+                        longitud: this.longitud,
+                        latitud: this.latitud,
+                        descripcion: this.descripcion,
+                        sector:this.sector,
+                        tipo:this.tipo,
+                    },
+                }).then((response) => {
+                  this.mensaje=response.data.mensaje;
+                  Materialize.toast(this.mensaje, 2000);
+                  if(response.data.estado){
+                    this.formulario=2;
+                    window.location.href='crear_partido.html';
+                  }else{
+                    this.formulario=1;
+                  }
+                }).catch((error) => {
+                    this.formulario=1;
+                    this.usuario='';
+                    this.contrasena='';
+                    console.log(error);
+                });
+              }else{
+                  this.mensaje='Debe completar los campos';
+              }
+        }
+    }
+});
+
+
+</script>
+</body>
+</html>

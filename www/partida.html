@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <title>SOCCERON</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/micss.css">
+    <style>
+       #map {
+        height: 100%;
+        width: 100%;
+       }
+    </style>
+
+</head>
+<body class="fondo animated fadeIn">
+  <div id="parametro">
+    <nav class="nav-extended light-blue darken-4">
+      <div class="nav-wrapper">
+        <a href="principal.html" class="brand-logo" style="font-size: 1.2rem">SOCCERON</a>
+        <a href="principal.html"  class="button-collapse"><i class="material-icons">arrow_back</i></a>
+      </div>
+    </nav>
+    <div class="col s12">
+      <div class="card">
+        <div class="card-image">
+          <img src="img/fondo.jpg" style="height:90px"/>
+        </div>
+        <div class="card-content">
+          <div class="row">
+            <div class="col s6 offset-s3 foto-perfil">
+              <img class="circle responsive-img" :src="foto"  />
+            </div>
+          </div>
+          <span class="card-title black-text center-align">{{nombre}}</span>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-content">
+          <table class="stripedS">
+            <tbody>
+              <tr>
+                <td><b>Fecha</b></td>
+                <td>{{fecha}}</td>
+              </tr>
+              <tr>
+                <td><b>Hora</b></td>
+                <td>{{hora}}</td>
+              </tr>
+              <tr>
+                <td><b>Lugar</b></td>
+                <td>{{lugar}}</td>
+              </tr>
+              <tr>
+                <td><b>Sector</b></td>
+                <td>{{sector}}</td>
+              </tr>
+              <tr>
+                <td><b>Tipo de Cancha</b></td>
+                <td>{{tipo}}</td>
+              </tr>
+              <tr>
+                <td><b># Jugadores</b></td>
+                <td>{{numero}}</td>
+              </tr>
+              <tr>
+                <td><b>Cupos</b></td>
+                <td>{{cupo}}</td>
+              </tr>
+            </tbody>
+          </table>
+          <ul class="collapsible" data-collapsible="accordion">
+            <li>
+              <div class="collapsible-header"><i class="material-icons">group</i> Jugadores</div>
+              <div class="collapsible-body">
+                <ul class="collection" v-for="jugador in jugadores">
+                  <li class="collection-item avatar">
+                    <img :src="jugador.fb_ju" class="circle">
+                    <span class="title">{{jugador.nombre_ju}}</span>
+                    <a :href="jugador.correo_ju">{{jugador.correo_ju}}</a>
+                  </li>
+                </ul>
+
+              </div>
+            </li>
+          </ul>
+          <div v-if="estado==-1">
+            <button class="waves-effect waves-light btn red" style="width:100%" v-on:click="desactivar" ><i class="material-icons left">delete</i> Desactivar Partida</button>
+          </div>
+          <div v-if="estado==0">
+            <button class="waves-effect waves-light btn blue" style="width:100%" v-on:click="unir"><i class="material-icons left">check</i> Unirse a la Partida</button>
+          </div>
+          <div v-if="estado==1">
+            <button class="waves-effect waves-light btn orange" style="width:100%" v-on:click="desunir"><i class="material-icons left">clear</i> Salir de la Partida</button>
+          </div>
+
+        </div>
+      </div>
+
+
+
+    </div>
+
+  </div>
+<script src="js/jquery.min.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/vue.js"></script>
+<script>
+      const parametro = new Vue({
+          el: '#parametro',
+          data: {
+              codigo:0,
+              foto:'',
+              nombre:'',
+              estado:'',
+              jugadores:[],
+              cupo:'',
+              numero:'',
+              tipo:'',
+              sector:'',
+              lugar:'',
+              hora:'',
+              fecha:'',
+
+          },
+          methods: {
+            consultar:function(){
+              axios({
+                  method: 'GET',
+                  url: 'http://socceron.16mb.com/api/jugador/partida/'+this.codigo,
+              }).then((response) => {
+                valores=response.data;
+                if(valores.fb_ju==null)
+                  this.foto='img/defecto.png';
+                else
+                  this.foto=valores.fb_ju;
+                this.nombre=valores.creador;
+                if(valores.activo==1)
+                  this.estado=valores.estado;
+                else
+                  this.estado='no puede';
+
+
+                this.fecha=valores.dia_pa;
+                this.hora=valores.hora_pa;
+                this.lugar=valores.descripcion_ca;
+                this.sector=valores.sector_ca;
+                this.tipo=valores.tipo_ca;
+                this.numero=valores.jugadores_pa;
+                this.cupo=valores.jugadores_pa-valores.actuales_pa;
+
+
+
+                this.jugadores=valores.registrados;
+              }).catch((error) => {
+                  console.log(error);
+                  window.location.href='principal.html';
+              });
+            },
+            unir:function(){
+              axios({
+                  method: 'POST',
+                  url: 'http://socceron.16mb.com/api/jugador/partida/unir',
+                  data: {
+                      partido: this.codigo,
+                  },
+              }).then((response) => {
+                Materialize.toast(response.data.mensaje, 4000);
+                setTimeout(function(){
+                  window.location.href='principal.html';
+                },2000);
+              }).catch((error) => {
+                  window.location.href='principal.html';
+              });
+            },
+            desunir:function(){
+              axios({
+                  method: 'DELETE',
+                  url: 'http://socceron.16mb.com/api/jugador/partida/desunir',
+                  data: {
+                      partido: this.codigo,
+                  },
+              }).then((response) => {
+                Materialize.toast(response.data.mensaje, 4000);
+                setTimeout(function(){
+                  window.location.href='principal.html';
+                },2000);
+              }).catch((error) => {
+                  window.location.href='principal.html';
+              });
+            },
+            desactivar:function(){
+              axios({
+                  method: 'GET',
+                  url: 'http://socceron.16mb.com/api/jugador/partida/desactivar',
+                  data: {
+                      codigo: this.codigo,
+                  },
+              }).then((response) => {
+                Materialize.toast(response.data.mensaje, 4000);
+                setTimeout(function(){
+                  window.location.href='principal.html';
+                },2000);
+              }).catch((error) => {
+                  window.location.href='principal.html';
+              });
+            }
+          },
+          created(){
+            this.codigo=localStorage.partida;
+            this.consultar();
+          }
+      });
+
+</script>
+</body>
+</html>

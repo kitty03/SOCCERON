@@ -6,13 +6,14 @@
     <feature name="Device">
         <param name="browser-package" value="Device" />
     </feature>
-    <name>front-android</name>
+    <name>socceron</name>
     <description>
-        Hello World sample application that responds to the deviceready event.
+        Proyecto de Nuevas tecnicas FronEnd Android
     </description>
     <author email="support@phonegap.com" href="http://phonegap.com">
-        PhoneGap Team
+        PUCE
     </author>
+    <icon src="icono.png" />
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

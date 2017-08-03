@@ -15,9 +15,9 @@
     <div class="center-align col s12">
         <img src="img/logo_index.jpg" alt="logo" class="col s12 responsive-img"/>
     </div>
-    <div class="row fondo2 center-align" style="padding-top: 10px;margin-left:0;margin-right:0;">
+    <div class="row fondo2 center-align" style="padding-top: 10px;margin-left:0;margin-right:0;height:100%">
       <div class="center-align col s10 offset-s1" style="padding-top:12px">
-          <button class="waves-effect waves-light btn blue darken-4" style="display: block; width: 100%;"><span class="fa fa-facebook-official"></span> continuar con facebook</button>
+          <a class="waves-effect waves-light btn blue darken-4" style="display: block; width: 100%;" href="http://socceron.16mb.com/facebook" target="_blank"><span class="fa fa-facebook-official"></span> continuar con facebook</a>
       </div>
       <div class="linea center-align col s12"><br></div>
       <br>
@@ -28,7 +28,7 @@
               <div class="row">
                   <div class="input-field">
                       <i class="material-icons prefix">perm_identity</i>
-                      <input  type="text" class="validate" v-model="usuario"/>
+                      <input  type="email" class="validate" v-model="usuario"/>
                       <label for="icon_prefix">Ingrese su email</label>
                   </div>
                   <div class="input-field">
@@ -111,10 +111,24 @@ const login = new Vue({
         },
         registrar:function(){
           window.location.href='registro.html';
+        },
+        comprobar:function(){
+          axios({
+              method: 'GET',
+              url: 'http://socceron.16mb.com/api/comprobar',
+          }).then((response) => {
+            if(response.data.estado){
+              console.log('Login correcto');
+              window.location.href='principal.html';
+            }else{
+              console.log('Login incorrecto');
+            }
+          });
         }
     },
     created(){
       this.formulario=1;
+      this.comprobar();
     }
 });
 </script>

@@ -13,6 +13,7 @@
        #map {
         height: 100%;
         width: 100%;
+        position: absolute;
        }
     </style>
 
@@ -29,18 +30,18 @@
               <div class="background">
                   <img src="img/fondo.jpg">
               </div>
-              <a href="#!user"><img class="circle" src="http://lorempixel.com/100/100/people/"></a>
-              <a href="#!name"><span class="white-text name">Nombre Usuario <br> email@com.com</span></a>
+              <a href="#!user"><img class="circle" :src="foto" ></a>
+              <a href="#!name"><span class="white-text name">{{nombre}} <br> {{correo}}</span></a>
               <br>
             </div>
           </li>
-          <li><a href="sass.html"><i class="material-icons">forum</i> Contactenos</a></li>
-          <li><a href="badges.html"><i class="material-icons">help</i> Ayuda</a></li>
-          <li><a href="collapsible.html"><i class="material-icons">settings</i> Ajustes</a></li>
-          <li><a href="collapsible.html"><i class="material-icons">info</i> Cerrar Sesion</a></li>
+          <li><a href="#contactenos"><i class="material-icons">forum</i> Contactenos</a></li>
+          <li><a href="#ayuda"><i class="material-icons">help</i> Ayuda</a></li>
+          <li><a href="#config"><i class="material-icons">settings</i> Ajustes</a></li>
+          <li><a href="#cerrar" v-on:click="cerrarSesion()"><i class="material-icons">info</i> Cerrar Sesion</a></li>
         </ul>
         <ul class="right">
-          <li><a href="sass.html"><i class="material-icons">notifications</i></a></li>
+          <li><a href="#notificaciones"><i class="material-icons">notifications</i></a></li>
         </ul>
       </div>
       <div class="nav-content">
@@ -58,76 +59,150 @@
         <div class="card-content">
           <div class="row">
             <div class="col s6 offset-s3 foto-perfil">
-              <img class="circle responsive-img" src="img/defecto.png"  />
+              <img class="circle responsive-img" :src="foto"  />
             </div>
           </div>
-          <span class="card-title black-text center-align">Nombre Usuario</span>
+          <span class="card-title black-text center-align">{{nombre}}</span>
         </div>
       </div>
       <div>
         <ul class="collection with-header">
          <li class="collection-header"><h6>Mis Partidas</h6></li>
        </ul>
-       <div class="collection">
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
+       <div class="collection" v-for="partida in partidas">
+          <a href="#!" class="collection-item" v-on:click="recargar(partida.id_)">{{partida.descripcion_ca}}</a>
         </div>
       </div>
       <div>
         <ul class="collection with-header">
          <li class="collection-header"><h6>Partidas recomendadas</h6></li>
        </ul>
-       <div class="collection">
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
-          <a href="#!" class="collection-item">Alvin</a>
-        </div>
+       <ul class="collection" v-for="sugerencia in sugerencias">
+        <li class="collection-item avatar" v-on:click="recargar(sugerencia.id_)">
+          <i class="material-icons circle red">play_arrow</i>
+          <span class="title">{{sugerencia.descripcion_ca}}</span>
+          <p>{{sugerencia.creador}}<br>
+             <small class="right-align">{{sugerencia.empieza_pa}}</small>
+          </p>
+        </li>
+      </ul>
       </div>
     </div>
     <div id="partidas" class="col s12">
       <div id="map"></div>
       <div class="fixed-action-btn horizontal">
-        <a class="btn-floating btn-large blue waves-effect waves-light" title="Agregar Partida">
+        <a class="btn-floating btn-large blue waves-effect waves-light" title="Agregar Partida" href="crear_partido.html">
           <i class="material-icons"><i class="material-icons">add</i></i>
         </a>
       </div>
     </div>
-
   </div>
 <script src="js/jquery.min.js"></script>
 <script src="js/axios.min.js"></script>
 <script src="js/materialize.min.js"></script>
 <script src="js/vue.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8Osn5X_k12-In9NLjyI3wZoCf8Ta0LE" ></script>
 <script>
-      // This example displays a map with the language and region set
-      // to Japan. These settings are specified in the HTML script element
-      // when loading the Google Maps JavaScript API.
-      // Setting the language shows the map in the language of your choice.
-      // Setting the region biases the geocoding results to that region.
       const principal = new Vue({
           el: '#principal',
           data: {
               usuario: 0,
-              mensaje:'Ingrese sus credenciales'
+              nombre:'',
+              correo:'',
+              foto:'',
+              sugerencias:[],
+              partidas:[],
           },
           methods: {
+            comprobarSesion:function(){
+              axios({
+                  method: 'GET',
+                  url: 'http://socceron.16mb.com/api/comprobar',
+              }).then((response) => {
+                if(response.data.estado){
+                  //mapa
+                  $(".button-collapse").sideNav();
+
+                  //informacion del usuaria
+                  var jugador=response.data.info;
+                  this.usuario=jugador.id_ju;
+                  this.nombre=jugador.nombre_ju;
+                  this.correo=jugador.correo_ju;
+                  if(jugador.fb_ju!=='')
+                    this.foto=jugador.fb_ju;
+                  else
+                    this.foto='img/defecto.png';
+                    this.cargar();
+                }else{
+                  window.location.href='login.html';
+                }
+              }).catch((error) => {
+                  console.log(error);
+                  window.location.href='login.html';
+              });
+
+            },
+            cargar:function(){
+              //sugeridas
+              axios({
+                  method: 'GET',
+                  url: 'http://socceron.16mb.com/api/jugador/partida',
+              }).then((response) => {
+                this.sugerencias=response.data;
+              }).catch((error) => {
+                  console.log(error);
+              });
+              console.log(this.sugeridas);
+
+              //mis partidas
+              axios({
+                  method: 'GET',
+                  url: 'http://socceron.16mb.com/api/jugador/partida/ver',
+              }).then((response) => {
+                this.partidas=response.data;
+              }).catch((error) => {
+                  console.log(error);
+              });
+            },
+            cerrarSesion:function(){
+              axios({
+                  method: 'DELETE',
+                  url: 'http://socceron.16mb.com/api/ingresar',
+              }).then((response) => {
+                 window.location.href='login.html';
+              }).catch((error) => {
+                  console.log(error);
+              });
+            },
+            recargar:function(codigo){
+              localStorage.setItem("partida",codigo);
+              window.location.href='partida.html';
+            },
 
           },
           created(){
-            this.mensaje='Ingrese sus datos.';
+            //this.dibujarMapa();
+            this.comprobarSesion();
+          },
+          mounted(){
+            var map = new google.maps.Map(document.getElementById('map'), {
+              center: {lat: -0.2103317149386794, lng: -78.49101722341766},
+              scrollwheel: false,
+              zoom: 8,
+              disableDefaultUI: true,
+              fullscreenControl: true,
+              styles:[{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]}]
+            });
+            var myLatLng = {lat: -0.2103317149386794, lng: -78.49101722341766};
+            var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              title: '1'
+            });
           }
       });
-      $(".button-collapse").sideNav();
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 10,
-          center: {lat: 35.717, lng: 139.731}
-        });
-      }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8Osn5X_k12-In9NLjyI3wZoCf8Ta0LE&callback=initMap&language=ja&region=JP" async defer></script>
+
+
 </body>
 </html>

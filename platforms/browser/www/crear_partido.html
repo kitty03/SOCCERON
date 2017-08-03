@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <title>SOCCERON</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/micss.css">
+</head>
+<body class="fondo animated fadeIn">
+  <div id="crearpartida">
+    <nav class="nav-extended light-blue darken-4">
+      <div class="nav-wrapper">
+        <a href="principal.html" class="brand-logo" style="font-size: 1.2rem">SOCCERON</a>
+        <a href="principal.html"  class="button-collapse"><i class="material-icons">keyboard_arrow_left</i></a>
+      </div>
+    </nav>
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <div v-if="formulario==1">
+            <form class=""  v-on:submit.prevent="enviar">
+                <div class="row">
+                    <div class="input-field">
+                        <select v-model="codigo" class="browser-default">
+                          <option v-for="cancha in canchas" v-bind:value="cancha.id_ca">
+                            {{ cancha.descripcion_ca }}
+                          </option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="input-field">
+                      <select v-model="dia" class="browser-default col s4">
+                          <option selected disabled>dia</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                          <option value="16">16</option>
+                          <option value="17">17</option>
+                          <option value="18">18</option>
+                          <option value="19">19</option>
+                          <option value="20">20</option>
+                          <option value="21">21</option>
+                          <option value="22">22</option>
+                          <option value="23">23</option>
+                          <option value="24">24</option>
+                          <option value="25">25</option>
+                          <option value="26">26</option>
+                          <option value="27">27</option>
+                          <option value="28">28</option>
+                          <option value="29">29</option>
+                          <option value="30">30</option>
+                          <option value="31">31</option>
+                      </select>
+
+                      <select v-model="mes" class="browser-default col s4">
+                          <option selected disabled>mes</option>
+                          <option value="1">Ene</option>
+                          <option value="2">Feb</option>
+                          <option value="3">Mar</option>
+                          <option value="4">Abr</option>
+                          <option value="5">May</option>
+                          <option value="6">Jun</option>
+                          <option value="7">Jul</option>
+                          <option value="8">Ago</option>
+                          <option value="9">Sep</option>
+                          <option value="10">Oct</option>
+                          <option value="11">Nov</option>
+                          <option value="12">Dic</option>
+                      </select>
+
+                      <select v-model="ano" class="browser-default col s4">
+                          <option value="2017">2017</option>
+                          <option value="2018">2018</option>
+                          <option value="2019">2019</option>
+                      </select>
+                    </div>
+                    <br><br>
+                    <div class="input-field">
+                      <select v-model="hora" class="browser-default col s6">
+                          <option selected disabled>hora</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                          <option value="16">16</option>
+                          <option value="17">17</option>
+                          <option value="18">18</option>
+                          <option value="19">19</option>
+                          <option value="20">20</option>
+                          <option value="21">21</option>
+                          <option value="22">22</option>
+                          <option value="23">23</option>
+                          <option value="00">00</option>
+
+                      </select>
+
+                      <select v-model="minutos" class="browser-default col s6">
+                          <option value="00">00</option>
+                          <option value="15">15</option>
+                          <option value="30">30</option>
+                          <option value="45">45</option>
+                      </select>
+                    </div>
+                    <br><br>
+                    <div class="input-field">
+                        <input type="number" class="validate" v-model="numero"/>
+                        <label>Jugadores</label>
+                    </div>
+                </div>
+                <div class="fixed-action-btn horizontal">
+                  <a class="btn-floating btn-large green waves-effect waves-light" href="canchas.html">
+                    <i class="material-icons"><i class="material-icons">add</i></i>
+                  </a>
+                </div>
+                <button class="waves-effect waves-light btn grey" style="display: block; width: 100%;" type="submit">GUARDAR</button>
+            </form>
+          </div>
+          <div v-if="formulario==2">
+            <p>{{mensaje}}</p>
+            <div class="preloader-wrapper active">
+            <div class="spinner-layer spinner-blue">
+              <div class="circle-clipper left">
+                <div class="circle"></div>
+              </div><div class="gap-patch">
+                <div class="circle"></div>
+              </div><div class="circle-clipper right">
+                <div class="circle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/vue.js"></script>
+<script>
+
+const crearpartida = new Vue({
+    el: '#crearpartida',
+    data: {
+        canchas: [],
+        formulario:1,
+        numero:null,
+        dia:null,
+        mes:null,
+        ano:null,
+        hora:null,
+        minutos:null,
+        codigo:null,
+        mensaje:'Llene el formulario'
+    },
+    methods: {
+        enviar: function(e){
+              e.preventDefault();
+              if(this.codigo>0 && this.dia>0 && this.mes>0 && this.ano>0 && this.hora!='' && this.minutos!=''){
+                this.formulario=2;
+                this.mensaje='Procensando';
+                Materialize.toast(this.mensaje, 2000);
+                axios({
+                    method: 'POST',
+                    url: 'http://socceron.16mb.com/api/jugador/partida',
+                    data: {
+                        cancha: this.codigo,
+                        fecha: this.ano+'-'+this.mes+'-'+this.dia+' '+this.hora+':'+this.minutos+':00',
+                        jugadores: this.numero,
+                    },
+                }).then((response) => {
+                  this.mensaje=response.data.mensaje;
+                  Materialize.toast(this.mensaje, 2000);
+                  if(response.data.estado){
+                    this.formulario=2;
+                    window.location.href='principal.html';
+                  }else{
+
+                    this.formulario=1;
+                  }
+                }).catch((error) => {
+                    this.formulario=1;
+                    this.usuario='';
+                    this.contrasena='';
+                    console.log(error);
+                });
+              }else{
+                  this.mensaje='Debe completar los campos';
+              }
+        },
+        cargarCanchas:function(){
+          axios({
+              method: 'GET',
+              url: 'http://socceron.16mb.com/api/jugador/cancha',
+          }).then((response) => {
+            this.canchas=response.data;
+            Materialize.toast(this.mensaje, 1000);
+
+          }).catch((error) => {
+              console.log(error);
+          });
+        }
+    },
+    created(){
+      this.cargarCanchas();
+
+
+    }
+});
+
+</script>
+</body>
+</html>
