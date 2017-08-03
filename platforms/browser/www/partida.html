@@ -140,7 +140,11 @@
                 else
                   this.foto=valores.fb_ju;
                 this.nombre=valores.creador;
-                this.estado=valores.estado;
+                if(valores.activo==1)
+                  this.estado=valores.estado;
+                else
+                  this.estado='no puede';
+
 
                 this.fecha=valores.dia_pa;
                 this.hora=valores.hora_pa;
@@ -149,6 +153,8 @@
                 this.tipo=valores.tipo_ca;
                 this.numero=valores.jugadores_pa;
                 this.cupo=valores.jugadores_pa-valores.actuales_pa;
+
+
 
                 this.jugadores=valores.registrados;
               }).catch((error) => {
@@ -196,7 +202,7 @@
                       codigo: this.codigo,
                   },
               }).then((response) => {
-                //Materialize.toast(response.data.mensaje, 4000);
+                Materialize.toast(response.data.mensaje, 4000);
                 setTimeout(function(){
                   window.location.href='principal.html';
                 },2000);

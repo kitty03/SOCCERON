@@ -41,7 +41,7 @@
           <li><a href="#cerrar" v-on:click="cerrarSesion()"><i class="material-icons">info</i> Cerrar Sesion</a></li>
         </ul>
         <ul class="right">
-          <li><a href="sass.html"><i class="material-icons">notifications</i></a></li>
+          <li><a href="#notificaciones"><i class="material-icons">notifications</i></a></li>
         </ul>
       </div>
       <div class="nav-content">
@@ -101,8 +101,7 @@
 <script src="js/axios.min.js"></script>
 <script src="js/materialize.min.js"></script>
 <script src="js/vue.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8Osn5X_k12-In9NLjyI3wZoCf8Ta0LE&callback=initMap"
-    async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDv8Osn5X_k12-In9NLjyI3wZoCf8Ta0LE" ></script>
 <script>
       const principal = new Vue({
           el: '#principal',
@@ -184,36 +183,24 @@
           created(){
             //this.dibujarMapa();
             this.comprobarSesion();
+          },
+          mounted(){
+            var map = new google.maps.Map(document.getElementById('map'), {
+              center: {lat: -0.2103317149386794, lng: -78.49101722341766},
+              scrollwheel: false,
+              zoom: 8,
+              disableDefaultUI: true,
+              fullscreenControl: true,
+              styles:[{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]}]
+            });
+            var myLatLng = {lat: -0.2103317149386794, lng: -78.49101722341766};
+            var marker = new google.maps.Marker({
+              position: myLatLng,
+              map: map,
+              title: '1'
+            });
           }
       });
-      function initMap() {
-        // Create a map object and specify the DOM element for display.
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -0.2103317149386794, lng: -78.49101722341766},
-          scrollwheel: false,
-          zoom: 8,
-          disableDefaultUI: true,
-          fullscreenControl: true,
-          styles:[{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]}]
-
-        });
-      }
-      function addMarker(feature) {
-          var marker = new google.maps.Marker({
-            position: feature.position,
-            map: map
-          });
-      }
-      var features = [
-          {
-            position: new google.maps.LatLng(-0.2103317149386794, -78.49101722341766)
-          }];
-      for (var i = 0, feature; feature = features[i]; i++) {
-          addMarker(feature);
-      }
-
-
-
 </script>
 
 
