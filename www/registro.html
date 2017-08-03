@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1,width=device-width, height=device-height, target-densitydpi=device-dpi" />
+    <title>Registrar</title>
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/animate.min.css">
+    <link rel="stylesheet" href="css/micss.css">
+</head>
+<body class="fondo animated fadeIn">
+<div class="container">
+    <div class="center-align col s12">
+        <img src="img/logo_index.jpg" alt="logo" class="col s12 responsive-img"/>
+    </div>
+    <div class="row fondo2 center-align" style="padding-top: 10px;margin-left:0;margin-right:0;">
+      <br>
+      <div id="reg-form" >
+        <div v-if="formulario==1">
+          <form class="col s10 offset-s1"  v-on:submit.prevent="enviar">
+              <p>{{mensaje}}</p>
+              <div class="row">
+                  <div class="input-field">
+                      <i class="material-icons prefix">perm_identity</i>
+                      <input  type="text" class="validate" v-model="usuario"/>
+                      <label for="icon_prefix">Correo electronico</label>
+                  </div>
+                  <div class="input-field">
+                      <i class="material-icons prefix">perm_identity</i>
+                      <input type="text" class="validate" v-model="nombre"/>
+                      <label for="icon_prefix">Nombre Apellido</label>
+                  </div>
+                  <div class="input-field">
+                      <i class="material-icons prefix">lock</i>
+                      <input type="password" class="validate" v-model="contrasena"/>
+                      <label for="icon_prefix">Contrasena</label>
+                  </div>
+              </div>
+              <div class="center-align col s10 offset-s1">
+                  <button class="waves-effect waves-light btn grey" style="display: block; width: 100%;" type="submit">REGISTRARSE</button>
+                  <br><br>
+                  <span><small>Al unirte, aceptas los terminos y condiciones</small></span>
+              </div>
+          </form>
+        </div>
+        <div v-if="formulario==2">
+          <p>{{mensaje}}</p>
+          <div class="preloader-wrapper active">
+          <div class="spinner-layer spinner-blue">
+            <div class="circle-clipper left">
+              <div class="circle"></div>
+            </div><div class="gap-patch">
+              <div class="circle"></div>
+            </div><div class="circle-clipper right">
+              <div class="circle"></div>
+            </div>
+          </div>
+        </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/axios.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/vue.js"></script>
+<script>
+
+const registro = new Vue({
+    el: '#reg-form',
+    data: {
+        usuario: '',
+        contrasena:'',
+        nombre:'',
+        formulario:0,
+        mensaje:'Ingrese sus credenciales'
+    },
+    methods: {
+        enviar: function(e){
+              e.preventDefault();
+              if(this.usuario!=='' && this.contrasena!=='' && this.nombre!==''){
+                this.formulario=2;
+                this.mensaje='Procensando';
+                  axios({
+                      method: 'POST',
+                      url: 'http://socceron.16mb.com/api/registrar',
+                      data: {
+                          correo: this.usuario,
+                          contrasena: this.contrasena,
+                          nombre: this.nombre,
+                      },
+                  }).then((response) => {
+                    this.mensaje=response.data.mensaje;
+                    if(response.data.estado){
+                      this.formulario=2;
+                      setTimeout(function(){
+                        window.location.href='login.html';
+                      },1000);
+                    }else{
+                      this.formulario=1;
+                    }
+                  }).catch((error) => {
+                      this.formulario=1;
+                      this.usuario='';
+                      this.contrasena='';
+                      console.log(error);
+                  });
+              }else{
+                  this.mensaje='Debe completar los campos';
+              }
+        }
+    },
+    created(){
+      this.formulario=1;
+      this.mensaje='Ingrese sus datos.';
+    }
+});
+</script>
+</body>
+</html>
